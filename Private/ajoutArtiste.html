@@ -1,0 +1,85 @@
+<?php
+    require "../recommandation.php";
+    session_start();
+
+    if(!isset($_SESSION['user_id'])){
+        header("Location: ../connexion.html");
+        exit();
+    }
+
+    $message = "";
+
+    if($_SERVER['REQUEST_METHOD'] === 'POST'){
+
+        $nom = trim($_POST['nom']);
+
+
+        if(!empty($nom)){
+
+            $insert = $pdo->prepare("
+                INSERT INTO artiste (nomScene)
+                VALUES (?)
+            ");
+            
+            $insert->execute([$nom]);
+        
+            header("Location: ajoutArtiste.html");
+            exit;
+        }
+    }else{
+        $message = "Nom obligatoire !!!";
+    }
+
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>Boo - Ajoute un album</title>
+        <link rel="stylesheet" href="../style.css">
+    </head>
+
+    <body>
+        <header>
+            <nav>
+                <div class="logo">
+                   ♫Boo♫ ༼ つ ╹ ω╹ ༽つ
+                </div>
+                
+                <ul class="lien-nav">
+                    <li><a href="../index.html">♫Accueil♫</a></li>
+                    <li><a href="../fav.html">♡Favoris♡</a></li>
+                    <li><a href="../titre.html">♬Titres♬</a></li>
+                    <li><a href="../album.html">𓇳Albums𓇳</a></li>
+                    <li><a href="../artistes.html">⋆Artistes⋆</a></li>
+                </ul>
+
+                <div  class="bouton_connex">
+                    <?php if(isset($_SESSION['user_id'])): ?>
+                        <a href="../profil.html" class="bn1">Profil</a>
+                        <a href="../deconnexion.php" class="bn2">Déconnexion</a>
+                    <?php else: ?>
+                        <a href="../connexion.html" class="bn1">Connexion</a>
+                        <a href="../inscription.html" class="bn2">Inscription</a>
+                    <?php endif; ?>
+                </div>
+            </nav>
+        </header>
+        <main class="main-form">
+            <section>
+                <form class="form" method="POST">
+                    <h1>Ajouter un artiste ⋆</h1>
+                    <p class="error"><?= $message?></p>
+                    <input type="text" name="nom" placeholder="Nom de l'artiste" required>
+                    <button type="submit">Créer artiste⋆</button>
+                </form>
+           </section>
+           <section class="nav_ajout">
+                <a href="ajoutTitre.html">Ajouter un titre♬</a>
+                <a href="ajoutAlbum.html">Ajouter un album𓇳</a>
+                <a href="../artistes.html">Voir les artistes⋆</a>
+           </section>
+        </main>
+    </body>
+</html>

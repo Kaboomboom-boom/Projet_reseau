@@ -1,0 +1,129 @@
+<?php
+    require "../recommandation.php";
+    session_start();
+
+    if(!isset($_SESSION['user_id'])){
+        header("Location: ../connexion.html");
+        exit();
+    }
+
+    $message = "";
+    $artiste = $pdo->query("SELECT * FROM artiste ORDER BY nomScene")->fetchAll();
+    $albums = $pdo->query("SELECT * FROM album ORDER BY nom")->fetchAll();
+
+    if($_SERVER['REQUEST_METHOD'] === 'POST'){
+
+        $titre = trim($_POST['titre']);
+        $artiste_id = trim($_POST['artiste_id']);
+        $album_id = trim($_POST['album_id']);
+        $genre = trim($_POST['genre']);
+        $duree = trim($_POST['duree']);
+
+        $check = $pdo->prepare("
+            SELECT *
+            FROM album
+            WHERE id = ? AND id_artiste = ?
+        ");
+
+        $check->execute([$album_id, $artiste_id]);
+
+        if($check->rowCount() === 0){
+            $message = "L'album n'appartient pas à l'artiste !!";
+        }else{
+            if(!empty($titre) && !empty($artiste_id) && !empty($album_id) && !empty($genre) && !empty($duree)){
+
+                $insert = $pdo->prepare("
+                    INSERT INTO chanson (titre, duree, genre, id_album, id_artiste)
+                    VALUES (?,?,?,?,?)
+                ");
+                
+                $insert->execute([
+                    $titre,
+                    $duree,
+                    $genre,
+                    $album_id,
+                    $artiste_id
+                    
+                ]);
+            
+                header("Location: ajoutTitre.html");
+                exit;
+            }else{
+                $message = "Titre, artiste, album, genre et durée obligatoires !!!";
+             }
+        }
+    }
+
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>Boo - Ajoute un titre</title>
+        <link rel="stylesheet" href="../style.css">
+    </head>
+
+    <body>
+        <header>
+            <nav>
+                <div class="logo">
+                   ♫Boo♫ ༼ つ ╹ ω╹ ༽つ
+                </div>
+                
+                <ul class="lien-nav">
+                    <li><a href="../index.html">♫Accueil♫</a></li>
+                    <li><a href="../fav.html">♡Favoris♡</a></li>
+                    <li><a href="../titre.html">♬Titres♬</a></li>
+                    <li><a href="../album.html">𓇳Albums𓇳</a></li>
+                    <li><a href="../artistes.html">⋆Artistes⋆</a></li>
+                </ul>
+
+                <div  class="bouton_connex">
+                    <?php if(isset($_SESSION['user_id'])): ?>
+                        <a href="../profil.html" class="bn1">Profil</a>
+                        <a href="../deconnexion.php" class="bn2">Déconnexion</a>
+                    <?php else: ?>
+                        <a href="../connexion.html" class="bn1">Connexion</a>
+                        <a href="../inscription.html" class="bn2">Inscription</a>
+                    <?php endif; ?>
+                </div>
+            </nav>
+        </header>
+        <main class="main-form">
+            <section>
+                <form class="form" method="POST">
+                    <h1>Ajouter un titre♬</h1>
+                    <p class="error"><?= $message?></p>
+                    <input type="text" name="titre" placeholder="Titre de la musique" required>
+                    <select name="artiste_id" required>
+                        <option value="">---Choisir un artiste⋆---</option>
+                        <?php foreach($artiste as $ar): ?>
+                            <option value="<?= $ar['id']; ?>">
+                                <?= htmlspecialchars($ar['nomScene']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+
+                    <select name="album_id" required>
+                        <option value="">---Choisir un album⋆---</option>
+                        <?php foreach($albums as $album): ?>
+                            <option value="<?= $album['id']; ?>">
+                                <?= htmlspecialchars($album['nom']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <input type="text" name="genre" placeholder="Genre" required>
+                    <input type="text" name="duree" placeholder="Durée (ex : 3:25)" required>
+
+                    <button type="submit">Créer titre♬</button>
+            </form>
+           </section>
+           <section class="nav_ajout">
+                <a href="ajoutAlbum.html">Ajouter un album𓇳</a>
+                <a href="ajoutartistes.html">Ajouter un artiste⋆</a>
+                <a href="../titre.html">Voir les titres♬</a>
+           </section>
+        </main>
+    </body>
+</html>

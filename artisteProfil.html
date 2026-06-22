@@ -1,0 +1,91 @@
+<?php
+    session_start();
+    require "config.php";
+
+    $id = $_GET['id'] ?? null;
+
+    if(!$id){
+        die("Artiste introuvable !!!");
+    }
+
+    $requete = $pdo->prepare("
+        SELECT *
+        FROM artiste
+        WHERE id = ?;
+    ");
+
+    $requete->execute([$id]);
+    $artiste = $requete->fetch();
+
+    if(!$artiste){
+        die("Artiste introuvable !!!");
+    }
+
+    $requete2 = $pdo->prepare("
+        SELECT *
+        FROM album
+        WHERE id_artiste = ?
+        ORDER BY titre ASC;
+    ");
+
+    $requete2->execute([$id]);
+    $albums = $requete2->fetchAll();
+
+
+?>
+
+
+
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>Boo - Enregistre ta musique</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+        <header>
+            <nav>
+                <div class="logo">
+                   ♫Boo♫ ༼ つ ╹ ω╹ ༽つ
+                </div>
+                
+                <ul class="lien-nav">
+                    <li><a href="index.html">♫Accueil♫</a></li>
+                    <li><a href="fav.html">♡Favoris♡</a></li>
+                    <li><a href="titre.html">♬Titres♬</a></li>
+                    <li><a href="album.html">𓇳Albums𓇳</a></li>
+                    <li><a href="artistes.html">⋆Artistes⋆</a></li>
+                </ul>
+
+                <div  class="bouton_connex">
+                    <?php if(isset($_SESSION['user_id'])): ?>
+                        <a href="profil.html" class="bn1">Profil</a>
+                        <a href="deconnexion.php" class="bn2">Déconnexion</a>
+                    <?php else: ?>
+                        <a href="connexion.html" class="bn1">Connexion</a>
+                        <a href="inscription.html" class="bn2">Inscription</a>
+                    <?php endif; ?>
+                </div>
+            </nav>
+        </header>
+        <main class="page-artiste">
+            <section class="artiste-header">
+                <img src="<?= $artiste['photo']; ?>">
+                <h1><?= htmlspecialchars($artiste['nomScene']); ?></h1>
+           </section>
+
+           <h2>𓇳Albums𓇳</h2>
+
+           <section class="grille-albums">
+                <?php foreach($albums as $album):?>
+                    <div class="album-card">
+                        <img src="<?= $album['pochette']; ?>">
+                        <h3><?= htmlspecialchars($album['title']); ?></h3>
+                    </div>
+                <?php endforeach; ?>
+           </section>
+        </main>
+    </body>
+</html>

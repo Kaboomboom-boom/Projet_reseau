@@ -1,0 +1,129 @@
+<?php
+    session_start();
+    require "config.php";
+
+    if(!isset($_SESSION['user_id'])){
+        header("Location: connexion.html");
+        exit();
+    }
+
+    $userRequete = $pdo->prepare("
+        SELECT pseudo, email, dateCreation
+        FROM utilisateur
+        WHERE id = ?
+    ");
+
+    $userRequete->execute([$_SESSION['user_id']]);
+    $utilisateur = $userRequete->fetch();
+
+
+    $artisteRequete = $pdo->prepare("
+        SELECT a.name, 
+               a.image, 
+               COUNT(*) as total
+        FROM playlist_chanson pc
+        JOIN chanson c 
+            ON pc.id_chanson = c.id
+        JOIN artiste a 
+            ON c.id_artiste = a.id
+        JOIN playlist p 
+            ON pc.id_playlist = p.id
+        WHERE p.id_utilisateur = ?
+        GROUP BY a.id
+        ORDER BY total DESC
+        LIMIT 5
+    ");
+
+    $artisteRequete->execute([$_SESSION['user_id']]);
+    $topArtistes = $artisteRequete->fetchAll();
+
+    $albumsRequete = $pdo->prepare("
+        SELECT al.nom, al.pochette, COUNT(*) as total
+        FROM playlist_chanson pc
+        JOIN chanson c 
+            ON pc.id_chanson = c.id
+        JOIN albums al 
+            ON c.id_album = al.id
+        JOIN playlist p ON pc.id_playlist = p.id
+        WHERE p.id_utilisateur = ?
+        GROUP BY al.id
+        ORDER BY total DESC
+        LIMIT 5
+    ");
+
+    require "detect.php";
+
+    $appareil = getTypeAppareil();
+    $lieu = getPosition();
+
+
+    $albumsRequete->execute([$_SESSION['user_id']]);
+    $topAlbums = $albumsRequete->fetchAll();
+
+?>
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>Boo - Enregistre ta musique</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+        <header>
+            <nav>
+                <div class="logo">
+                   ♫Boo♫ ༼ つ ╹ ω╹ ༽つ
+                </div>
+                
+                <ul class="lien-nav">
+                    <li><a href="index.html">♫Accueil♫</a></li>
+                    <li><a href="fav.html">♡Favoris♡</a></li>
+                    <li><a href="titre.html">♬Titres♬</a></li>
+                    <li><a href="album.html">𓇳Albums𓇳</a></li>
+                    <li><a href="artistes.html">⋆Artistes⋆</a></li>
+                </ul>
+
+                <div  class="bouton_connex">
+                    <a href="profil.html" class="bn1">Profil</a>
+                    <a href="deconnexion.php" class="bn2">Déconnexion</a>
+                </div>
+            </nav>
+        </header>
+        <main class="main-profil">
+            <section class="card-profil">
+                <div class="pdp">
+                    <?= strtoupper(substr($utilisateur['pseudo'],0,1)); ?>
+                </div>
+                <h1><?= htmlspecialchars($utilisateur['pseudo']); ?></h1>
+                <p><?= htmlspecialchars($utilisateur['email']); ?></p>
+
+                <div class="info-box">
+                    <p>Compte créé le: <strong><?= date("d/m/Y", strtotime($utilisateur['dateCreation'])); ?></strong></p>
+                    <h2>Informations de connexion</h2>
+                    <p><strong>Type d'appareil: </strong> <?= $interface; ?></p>
+                    <p><strong>Pays: </strong> <?= $lieu['pays']; ?></p>
+                    <p><strong>Régions: </strong> <?= $lieu['region']; ?></p>
+                </div>
+            </section>
+            <section>
+                <div class="mini-grille">
+                    <?php foreach($topArtistes as $artiste): ?>
+                        <div class="mini-card">
+                            <img src="<?= $artiste['photo']; ?>">
+                            <p><?= $artiste['nomScene']; ?></p>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+                <div class="mini-grille">
+                    <?php foreach($topAlbums as $album): ?>
+                        <div class="mini-card">
+                            <img src="<?= $album['pochette']; ?>">
+                            <p><?= $album['nom']; ?></p>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </section>
+        </main>
+    </body>
+</html>

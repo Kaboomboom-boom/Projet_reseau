@@ -1,0 +1,77 @@
+<?php
+    session_start();
+    require "config.php";
+
+    if(!isset($_SESSION['user_id'])){
+        header("Location: connexion.html");
+        exit();
+    }
+
+    $requete = $pdo->prepare("
+       SELECT id, nomScene, photo
+       FROM artiste
+       ORDER BY nomScene ASC
+    ");
+
+    $requete->execute();
+    $artistes = $requete->fetchAll();
+
+?>
+
+
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>Boo - Enregistre ta musique</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+        <header>
+            <nav>
+                <div class="logo">
+                   ♫Boo♫ ༼ つ ╹ ω╹ ༽つ
+                </div>
+                
+                <ul class="lien-nav">
+                    <li><a href="index.html">♫Accueil♫</a></li>
+                    <li><a href="fav.html">♡Favoris♡</a></li>
+                    <li><a href="titre.html">♬Titres♬</a></li>
+                    <li><a href="album.html">𓇳Albums𓇳</a></li>
+                    <li><a href="artistes.html">⋆Artistes⋆</a></li>
+                </ul>
+
+                <div  class="bouton_connex">
+                    <?php if(isset($_SESSION['user_id'])): ?>
+                        <a href="profil.html" class="bn1">Profil</a>
+                        <a href="deconnexion.php" class="bn2">Déconnexion</a>
+                    <?php else: ?>
+                        <a href="connexion.html" class="bn1">Connexion</a>
+                        <a href="inscription.html" class="bn2">Inscription</a>
+                    <?php endif; ?>
+                </div>
+            </nav>
+        </header>
+        <main class="art">
+            <h1>⋆Artistes⋆</h1>
+            <section class="artistes-grid">
+                <?php
+                    foreach($artistes as $artiste):
+                ?>
+                    <div class="artiste-card">
+                        <a href="artisteProfil.html?id=<?= $artiste['id']; ?>" class="artiste-card-lien">
+                            <div class="artiste-card">
+                                <img src="<?= $artiste['photo']; ?>" alt="photo"> 
+                                <h3><?= htmlspecialchars($artiste['nomScene']); ?></h3>
+                            </div>
+                        </a>
+                    </div>
+                <?php endforeach; ?>
+            </section>
+            <section class="action-admin">
+                <a href="Private/ajoutArtiste.html" class="bouton-add">+ Ajouter un artiste</a>
+            </section>
+        </main>
+    </body>
+</html>

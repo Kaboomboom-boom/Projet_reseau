@@ -1,0 +1,67 @@
+<?php
+    require "recommandations.php";
+    session_start();
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>Boo - Enregistre ta musique</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+        <header>
+            <nav>
+                <div class="logo">
+                   ♫Boo♫ ༼ つ ╹ ω╹ ༽つ
+                </div>
+                
+                <ul class="lien-nav">
+                    <li><a href="index.html">♫Accueil♫</a></li>
+                    <li><a href="fav.html">♡Favoris♡</a></li>
+                    <li><a href="titre.html">♬Titres♬</a></li>
+                    <li><a href="album.html">𓇳Albums𓇳</a></li>
+                    <li><a href="artistes.html">⋆Artistes⋆</a></li>
+                </ul>
+
+                <div  class="bouton_connex">
+                    <?php if(isset($_SESSION['user_id'])): ?>
+                        <a href="profil.html" class="bn1">Profil</a>
+                        <a href="deconnexion.php" class="bn2">Déconnexion</a>
+                    <?php else: ?>
+                        <a href="connexion.html" class="bn1">Connexion</a>
+                        <a href="inscription.html" class="bn2">Inscription</a>
+                    <?php endif; ?>
+                </div>
+            </nav>
+        </header>
+        <main>
+            <section class="playlist_fav">
+                <img src="images_favoris.png" alt="pochette playlist favoris">
+                <h1>Playlist Favoris</h1>
+            </section>
+
+            <h2>Artistes recommandés</h2>
+            <section class="grid">
+                <?php foreach($artisteRecommande as $artiste): ?>
+                    <div class="card" id="carte-artiste">
+                        <img src="<?= $artiste['photo']; ?>">
+                        <h3><?= $artiste['nomScene']; ?></h3>
+                    </div>
+                <?php endforeach; ?>
+            </section>
+
+            <h2>Albums recommandés</h2>
+            <section class="grid">
+                <?php foreach($albumRecommande as $album): ?>
+                    <div  class="card">
+                        <img src="<?= $album['pochette']; ?>">
+                        <h3><?= $album['nom']; ?></h3>
+                    </div>
+                <?php endforeach; ?>
+            </section>
+        </main>
+    </body>
+</html>

@@ -1,0 +1,96 @@
+<?php
+    session_start();
+    require "config.php";
+
+    $requete = $pdo->prepare("
+       SELECT al.id,
+              al.nom,
+              al.pochette,
+              ar.nomScene AS artiste,
+              al.genre
+        FROM album al
+        JOIN artiste ar ON al.id_artiste = ar.id
+        ORDER BY al.nom ASC
+    ");
+
+    $requete->execute();
+    $albums = $requete->fetchAll();
+
+?>
+
+
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>Boo - Enregistre ta musique</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+        <header>
+            <nav>
+                <div class="logo">
+                   ♫Boo♫ ༼ つ ╹ ω╹ ༽つ
+                </div>
+                
+                <ul class="lien-nav">
+                    <li><a href="index.html">♫Accueil♫</a></li>
+                    <li><a href="fav.html">♡Favoris♡</a></li>
+                    <li><a href="titre.html">♬Titres♬</a></li>
+                    <li><a href="album.html">𓇳Albums𓇳</a></li>
+                    <li><a href="artistes.html">⋆Artistes⋆</a></li>
+                </ul>
+
+                <div  class="bouton_connex">
+                    <?php if(isset($_SESSION['user_id'])): ?>
+                        <a href="profil.html" class="bn1">Profil</a>
+                        <a href="deconnexion.php" class="bn2">Déconnexion</a>
+                    <?php else: ?>
+                        <a href="connexion.html" class="bn1">Connexion</a>
+                        <a href="inscription.html" class="bn2">Inscription</a>
+                    <?php endif; ?>
+                </div>
+            </nav>
+        </header>
+        <main class="album-conteneur">
+            <h1>𓇳Albums𓇳</h1>
+            <?php if(isset($_GET['playlist'])): ?>
+                <?php if($_GET['playlist'] === 'ajoute'): ?>
+                    <p class="message-success">Album ajouté à ta playlist.</p>
+                <?php elseif($_GET['playlist'] === 'deja'): ?>
+                    <p class="message-info">Tous les titres de cet album sont déjà dans ta playlist.</p>
+                <?php elseif($_GET['playlist'] === 'vide'): ?>
+                    <p class="message-info">Cet album ne contient aucun titre.</p>
+                <?php else: ?>
+                    <p class="message-error">Impossible d'ajouter cet album.</p>
+                <?php endif; ?>
+            <?php endif; ?>
+            <section class="playlist_liste">
+                <?php
+                    foreach($albums as $album):
+                ?>
+                    <div class="ligne">
+                        <div class="pochette_album">
+                            <img src="<?= $album['pochette']; ?>" alt="pochette"> 
+                        </div>
+                        <div class="info_album">
+                            <h3><?= htmlspecialchars($album['nom']); ?></h3>
+                            <p><?= htmlspecialchars($album['artiste']); ?></p>
+                        </div>
+                        <div class="genre_album">
+                            <?= $album['genre']; ?>
+                        </div>
+                        <form method="POST" action="ajouterAlbumPlaylist.php" class="form-ajout-playlist">
+                            <input type="hidden" name="id_album" value="<?= $album['id']; ?>">
+                            <button type="submit" class="btn-playlist">+ Playlist</button>
+                        </form>
+                    </div>
+                <?php endforeach; ?>
+            </section>
+            <section class="action-admin">
+                <a href="Private/ajoutAlbum.html" class="bouton-add">+ Ajouter un album</a>
+            </section>
+        </main>
+    </body>
+</html>

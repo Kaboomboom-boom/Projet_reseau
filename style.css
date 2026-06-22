@@ -1,0 +1,556 @@
+*{
+    margin: 0;
+    padding : 0;
+    box-sizing: border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    background-color: #121212;
+    color: white;
+}
+
+nav{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 20px;
+    background-color: #1b1b1b;
+    border-bottom: 1px solid #2f2f2f;
+}
+
+section{
+    padding: 40px 50px;
+}
+
+section h2{
+    margin-bottom: 25px;
+    font-size: 2rem;
+}
+
+
+.logo{
+    font-size: 1.8rem;
+    font-weight: bold;
+    color:#b26cff;
+}
+
+.lien-nav{
+    display:flex;
+    list-style: none;
+    gap :30px;
+}
+
+.lien-nav a{
+    text-decoration: none;
+    color: white;
+    font-weight: 500;
+    transition: 0.3s;
+    position: relative;
+}
+
+.lien-nav a:hover{
+    color: #b26cff;
+}
+
+.bouton_connex{
+    display: flex;
+    gap: 15px;
+}
+
+.bn1, .bn2{
+    color: white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+
+}
+
+.bn1{
+    border: 2px solid #b26cff;
+}
+
+
+.bn1:hover{
+    background: #b26cff;
+}
+
+
+.bn2{
+    background: #b26cff;
+}
+
+.bn2:hover{
+    background: #cb9dff;
+}
+
+.playlist_fav{
+    display: flex;
+    gap: 40px;
+    padding: 50px;
+    background: linear-gradient(180deg, #5f2da7, #1a1a1a);
+}
+
+.playlist_fav img{
+    width: 260px;
+    height: 260px;
+    object-fit: cover;
+    border-radius: 15px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+}
+
+.grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 25px;
+}
+
+.card{
+    background: #181818;
+    padding: 15px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.card:hover{
+    background: #252525;
+    transform: translateY(-6px);
+}
+
+.card img{
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.card h3{
+    margin-top: 15px;
+}
+
+#carte-artiste img{
+    border-radius: 50%;
+    height: 180px;
+}
+
+.main-form{
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #121212;
+}
+
+.form{
+    width: 420px;
+    background: #181818;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 0 25px rgba(178, 108, 255, 0.2);
+}
+
+.form h1{
+    text-align: center;
+    margin-bottom: 30px;
+    color: #b26cff;
+}
+
+.form input{
+    width:100%;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 10px;
+    background: #2a2a2a;
+    color: white;
+    font-size: 1rem;
+}
+
+.form input:focus{
+    outline: none;
+    box-shadow: 0 0 10px #b26cff;
+}
+
+.form button{
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 30px;
+    background: #b26cff;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.form button:hover{
+    transform:scale(1.03);
+    background: #cb9dff;
+}
+
+.form p{
+    text-align: center;
+    margin-top: 20px;
+}
+
+.form a{
+    color: #b26cff;
+    text-decoration: none;
+}
+
+.error{
+    color:#ff6b6b;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.main-profil{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 100vh;
+    background: #121212;
+}
+
+.card-profil{
+    width: 500px;
+    padding: 40px;
+    background: #181818;
+    border-radius: 20px;
+    text-align: center;
+}
+
+.pdp{
+    width: 130px;
+    height: 130px;
+    margin: auto;
+    border-radius: 50%;
+    background: #b26cff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.info-box{
+    margin-top: 20px;
+    padding: 15px;
+    background: #222;
+    border-radius: 12px;
+    text-align: left;
+}
+
+.info h2{
+    margin-bottom: 10px;
+    color: #b26cff;
+}
+ 
+.mini-grille{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.mini-card{
+    background: #222;
+    padding:10px;
+    border-radius: 12px;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.mini-card:hover{
+    transform: scale(1.05);
+    background: #2d2d2d;
+}
+
+
+.mini-card img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 5px;
+}
+
+.mini-card p{
+    font-size: 0.8rem;
+}
+
+.danger-btn{
+    display: inline-block;
+    margin-top: 25px;
+    padding: 12px 20px;
+    background: #ff4d4d;
+    color:white;
+    border-radius: 30px;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.danger-btn:hover{
+    background: #ff1f1f;
+    transform: scale(1.05);
+}
+
+.playlist_liste{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    background: #181818;
+    padding: 10px 15px;
+    border-radius: 12px;
+    transition: 0.3s;
+    gap: 10px;
+}
+
+.playlist_liste:hover{
+    background: #252525;
+    transform: scale(1.01);
+}
+
+.index{
+    width: 50px;
+    text-align: center;
+    color: #b26cff;
+    font-weight:bold;
+}
+
+.pochette-chanson img{
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.info-chanson{
+    flex: 1;
+    margin-left: 15px;
+}
+
+.info-chanson h3{
+    margin: 0;
+    font-size: 1rem;
+}
+
+.info-chanson p{
+    margin: 2px 0;
+    font-size: 0.85rem;
+    color: #aaa;
+}
+
+.nom-album{
+    color: #777;
+    font-size: 0.8rem;
+}
+
+.duree_chanson{
+    color: #bbb;
+    width: 60px;
+    text-align: right;
+}
+
+.fav, .album-conteneur, .title, .art{
+    padding: 40px;
+    background: #121212;
+    min-height: 100vh;
+    color: white;
+}
+
+.fav h1, .album-conteneur h1, .title h1, .art h1{
+    color:#b26cff;
+    margin-bottom: 25px;
+}
+
+.liste-chanson{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.ligne{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #181818;
+    padding: 10px 15px;
+    border-radius: 12px;
+    transition: 0.3s;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.ligne:hover{
+    background: #252525;
+    transform: scale(1.01);
+}
+
+.form-ajout-playlist{
+    margin-left: 15px;
+}
+
+.btn-playlist{
+    background: #b26cff;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-playlist:hover{
+    background: #cb9dff;
+    transform: scale(1.05);
+}
+
+.message-success,
+.message-info,
+.message-error{
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.message-success{
+    color: #7dff9b;
+}
+
+.message-info{
+    color: #ffd36c;
+}
+
+.message-error{
+    color: #ff7d7d;
+}
+
+.genre_album{
+    display: inline-block;
+    margin-top: 5px;
+    font-size: 75rem;
+    color: #b26cff;
+}
+
+.artistes-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180,1fr));
+    gap:20px;
+}
+
+.artiste-card{
+    background: #181818;
+    padding: 15px;
+    border-radius: 15px;
+    text-align:center;
+    transition: 0.3s;
+}
+
+.artiste-card:hover{
+    background: #252525;
+    transform: translateY(-5px);
+}
+
+.artiste-card img{
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+.artiste-card-lien{
+    text-decoration: none;
+    color:white;
+}
+
+.page-artiste{
+    padding: 40px;
+    background: #121212;
+    min-height: 100vh;
+    color: white;
+}
+
+.artiste-header{
+    display: flex;
+    align-items: center;
+    gap:20px;
+    margin-bottom: 30px;
+}
+
+.artiste-header img{
+    width:150px;
+    height:150px;
+    border-radius:50%;
+    object-fit:cover;
+}
+
+.artiste-header h1{
+    color:#b26cff;
+    font-size:2.5rem;
+}
+
+.action-admin{
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.add-btn{
+    background: #b26cff;
+    color:white;
+    padding: 10px 15px;
+    border-radius: 25px;
+    text-decoration: none;
+    transition: 0.3s;
+    font-weight: bold;
+}
+
+.add-btn:hover{
+    background: #cb9dff;
+    transform: scale(1.05);
+}
+
+form select{
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 15px;
+    border:none;
+    border-radius: 10px;
+    background: #2a2a2a;
+    color: white;
+    font-size: 1rem;
+}
+
+.nav_ajout{
+    background: #1f1f1f;
+    color:white;
+    padding: 10px 15px;
+    border-radius: 20px;
+    text-decoration: none;
+    transition: 0.3s;
+    font-size: 0.9rem;
+    border:1px solid #333
+}
+
+.nav_ajout:hover{
+        background: #b26cff;
+        transform: scale(1.05);
+        border-color: #b26cff;
+        color:white
+}
+
+.nav_ajout a{
+    color: white;
+    text-decoration: none;
+
+}

@@ -1,0 +1,88 @@
+<?php
+    session_start();
+    require "config.php";
+
+    if(!isset($_SESSION['user_id'])){
+        header("Location: connexion.html");
+        exit();
+    }
+
+    $requete = $pdo->prepare("
+        SELECT c.titre AS titre,
+               c.duree,
+               al.nom as album,
+               al.pochette,
+               ar.nomScene as artiste,
+               pc.dateCreation
+        FROM playlist pc
+        JOIN chanson c
+            ON pc.id_chanson on c.id
+        JOIN album al
+            ON c.id_albuù = al.id
+        JOIN artiste ar
+            ON c.id_artiste = ar.id
+        JOIN playlist_fav pf
+            ON pc.id = pf.id_playlist
+        WHERE pc.id_utilisateur = ?
+        ORDER BY pc.dateCreation
+    ");
+
+    $requete->execute([$_SESSION['user_id']]);
+    $chanson = $requete->fetchAll();
+
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>Boo - Enregistre ta musique</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+        <header>
+            <nav>
+                <div class="logo">
+                   ♫Boo♫ ༼ つ ╹ ω╹ ༽つ
+                </div>
+                
+                <ul class="lien-nav">
+                    <li><a href="index.html">♫Accueil♫</a></li>
+                    <li><a href="fav.html">♡Favoris♡</a></li>
+                    <li><a href="titre.html">♬Titres♬</a></li>
+                    <li><a href="album.html">𓇳Albums𓇳</a></li>
+                    <li><a href="artistes.html">⋆Artistes⋆</a></li>
+                </ul>
+            </nav>
+        </header>
+        <main class="fav">
+            <h1>♡Playlist favoris♡</h1>
+            <section class="liste-chanson">
+                <?php
+                    $index = 1;
+                    foreach($chanson in $chansons):
+                ?>
+                    <div class="ligne">
+                        <div class="index">
+                            #<?= $index++;?>
+                        </div>
+                        <div class="pochette-chanson">
+                            <img src="<?= $chanson['pochette']; ?>" alt="pochette"> 
+                        </div>
+                        <div class="info-chanson">
+                            <h3><?= htmlspecialchars($chanson['titre']); ?></h3>
+                            <p><?= htmlspecialchars($chanson['artiste']); ?></p>
+                        </div>
+                        <div class="nom-album">
+                            <?= $chanson['album']; ?>
+                        </div>
+                        <div class="duree_chanson">
+                            <?= $chanson['duree']; ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </section>
+        </main>
+    </body>
+</html>

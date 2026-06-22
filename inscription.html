@@ -1,0 +1,73 @@
+<?php
+    session_start();
+    require "config.php";
+
+    $message = "";
+
+    if($_SERVER['REQUEST_METHOD'] === 'POST'){
+        $pseudo = trim($_POST['pseudo']);
+        $email = trim($_POST['email']);
+        $mdp = trim($_POST['mdp']);
+
+        if(!empty($pseudo) && !empty($email) && !empty($mdp)){
+            $check = $pdo->prepare("
+                SELECT id
+                FROM utilisateur
+                WHERE email = ?
+            ");
+
+            $check->execute(['$email']);
+
+            if($check->rowCount() === 0){
+                $token = bin2hex(random_bytes(32));
+
+                $insert = $pdo->prepare("
+                    INSERT INTO utilisateur(pseudo,
+                                            email,
+                                            motDePasse,
+                                            token,
+                                            compteVerifie)
+                    VALUES(?,?,?,?,0)
+                ");
+
+                $insert->execute([$pseudo, $email, $mdp, $token])
+
+                header("Location: attenteVerif.php")
+            }else{
+                $message = "Cette adresse est déjà utilisée ;!!!"
+            }
+
+
+        }
+
+    }
+
+?>
+
+
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>Boo - Enregistre ta musique</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+        <main class="main-form">
+            <form class="form" method="POST">
+                <h1>Créer un compte</h1>
+                <p class="error"><?= $message; ?></p>
+
+                <input type="text" name="pseudo" placeholder="Pseudo" required>
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="mdp" placeholder="Mot de passe" required>
+
+                <button type="submit">Créer un compte</button>
+
+                <p>Déjà un compte?<a href="connexion.html"> Se connecter</a></p>
+                <p>Retourner à <a href="index.html">l'Accueil</a></p>
+            </form>
+        </main>
+    </body>
+</html>

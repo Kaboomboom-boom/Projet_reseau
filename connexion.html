@@ -1,0 +1,58 @@
+<?php
+    session_start();
+    require "config.php";
+
+    $message = "";
+
+    if($_SERVER['REQUEST_METHOD'] === 'POST'){
+        $email = trim($_POST['email']);
+        $mdp = trim($_POST['mdp']);
+
+        $requete = $pdo->prepare("
+            SELECT *
+            FROM utilisateur
+            WHERE email = ?
+        ");
+
+       $requete->execute([$email]);
+       $utilisateur = $requete.fetch();
+
+       if($utilisateur && password_verify($password, $utilisateur['motDePasse'])){
+            $_SESSION['user_id'] = utilisateur['id'];
+            $_SESSION['username'] = utilisateur['pseudo'];
+
+            header("Location: index.html");
+            exit;
+       }
+
+       $message = "Identifiant ou mot de passe incorrects !!"
+    }
+
+?>
+
+
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>Boo - Enregistre ta musique</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+        <main class="main-form">
+            <form class="form" method="POST">
+                <h1>Connexion</h1>
+                <p class="error"><?= $message; ?></p>
+
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="mdp" placeholder="Mot de passe" required>
+
+                <button type="submit">Créer un compte</button>
+
+                <p>Pas encore inscrit?<a href="inscription.html"> Créer un compte</a></p>
+                <p>Retourner à <a href="index.html">l'Accueil</a></p>
+            </form>
+        </main>
+    </body>
+</html>
